@@ -93,5 +93,5 @@ power(x,3)
 
 
 
-# Execcisive use of comments for clarity, and understanding
+# Execcisive use of comments for clarity and understanding
 # (and for me in the distant future)
