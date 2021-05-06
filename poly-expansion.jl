@@ -10,7 +10,7 @@ function expand(x,y)
 end
 
 function calc(x)
-    # COUNTS AND ADDS UP VARIABLES!
+    # Counts and adds up variables
     v = vec([])
     for i in 1:size(x)[1]
         count = 1
@@ -21,13 +21,12 @@ function calc(x)
                 continue
             end
             # collect breaks the string down into an array
-            # sort sorts then alphabetically
+            # sort() sorts then alphabetically
             # so 2ab is identified the same as 2ba
             if sort(collect(x[i])) == sort(collect(x[j]))
                 count = count + 1
                 occ = true
                 x[j] = string(j)# so that next time, the same variable cannot interfiere
-
             end
         end
 
@@ -37,6 +36,8 @@ function calc(x)
             # Check if its the number we replaced the variables with
             # if it is, we dont want it interfiering
             if tryparse(Int64, string(x[i])) == nothing
+                # during multiple runs, strings can be like "2a2aab"
+                # this step fixed that and combinest the numbers together
                 temp = 1
                 k = collect(x[i])
                 for iter in 1:size(k)[1]
@@ -48,19 +49,17 @@ function calc(x)
                     end
                 end
                 # Removes char " " from the string
-                # thx StackOverflow!
                 filter!(e->e!=' ',k)
                 if temp != 1
                     push!(v,string(temp)*join(sort(k)))
                 else
                     push!(v,x[i])
                 end
-
             end
         end
     end
     # At some cases with high number of features, you can get numbers within the array
-    # one final step to remove them!
+    # one final step to remove them
     y = vec([])
     for i in 1:size(v)[1]
         if tryparse(Int64, string(v[i])) == nothing
@@ -74,6 +73,7 @@ function power(x,n)
     println("Initial: ",x)
     t = x
     for i in 1:n-1
+        # possible to combine them, but for the sake of readibily and ease didn't.
         t = calc(expand(x,t))
     end
     println("Final: ",t)
@@ -88,5 +88,10 @@ x = vec([])
 for i in 1:m
     push!(x,alpha[i])
 end
-# power(x, the power you raise it to)
+# usage: power(x, the power you raise it to)
 power(x,3)
+
+
+
+# Execcisive use of comments for clarity, and understanding
+# (and for me in the distant future)
