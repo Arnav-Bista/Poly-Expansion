@@ -69,28 +69,38 @@ function calc(x)
     return y
 end
 
-function power(x,n)
-    println("Initial: ",x)
+function disp()
+    # NUMBER OF VARIABLES! max is 24 as of now
+    m = 2
+    alpha = "abcdefghijklmnopqrstuvwxyz"
+
+    x = vec([])
+    for i in 1:m
+        push!(x,alpha[i])
+    end
+    # usage: power(x, the power you raise it to)
+    poly_expand(m,3,true)
+end
+
+function poly_expand(m,n,show = false)
+
+    alpha = "abcdefghijklmnopqrstuvwxyz"
+
+    x = vec([])
+    for i in 1:m
+        push!(x,alpha[i])
+    end
     t = x
     for i in 1:n-1
         # possible to combine them, but for the sake of readibily and ease didn't.
         t = calc(expand(x,t))
     end
-    println("Final: ",t)
+    if show
+        println("Initial: ",x)
+        println("Final: ",t)
+    end
+    return t
 end
-
-
-# NUMBER OF VARIABLES! max is 24 as of now
-m = 2
-alpha = "abcdefghijklmnopqrstuvwxyz"
-
-x = vec([])
-for i in 1:m
-    push!(x,alpha[i])
-end
-# usage: power(x, the power you raise it to)
-power(x,3)
-
 
 
 # Execcisive use of comments for clarity and understanding
