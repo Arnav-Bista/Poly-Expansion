@@ -1,107 +1,42 @@
 
-function expand(x,y)
+function expand(v1,v2)
     v = vec([])
-    for i in 1:size(x)[1]
-        for j in 1:size(y)[1]
-            push!(v, x[i]*y[j])
+    for i in 1:size(v1)[1]
+        for j in 1:size(v2)[1]
+            push!(v, v1[i]*v2[j])
         end
     end
     return v
 end
 
 function calc(x)
-    # Counts and adds up variables
     v = vec([])
+    fin = vec([])
     for i in 1:size(x)[1]
-        count = 1
-        occ = false
-        for j in 1:size(x)[1]
-            # Cant add an element with itself
-            if i == j
-                continue
-            end
-            # collect breaks the string down into an array
-            # sort() sorts then alphabetically
-            # so 2ab is identified the same as 2ba
-            if sort(collect(x[i])) == sort(collect(x[j]))
-                count = count + 1
-                occ = true
-                x[j] = string(j)# so that next time, the same variable cannot interfiere
-            end
-        end
-
-        if occ
-            push!(v,string(count)*x[i])
+        push!(v,join(sort(collect(x[i]))))
+    end
+    t = Set(v)
+    temp = 0
+    for j in t
+        temp = count(i->(i == j),v)
+        if temp != 1
+            push!(fin,string(temp)*j)
         else
-            # Check if its the number we replaced the variables with
-            # if it is, we dont want it interfiering
-            if tryparse(Int64, string(x[i])) == nothing
-                # during multiple runs, strings can be like "2a2aab"
-                # this step fixed that and combinest the numbers together
-                temp = 1
-                k = collect(x[i])
-                for iter in 1:size(k)[1]
-                    # using temp2 to not call the same function twice
-                    temp2 = tryparse(Int64, string(k[iter]))
-                    if temp2 != nothing
-                        temp = temp + temp2
-                        k[iter] = ' '
-                    end
-                end
-                # Removes char " " from the string
-                filter!(e->e!=' ',k)
-                if temp != 1
-                    push!(v,string(temp)*join(sort(k)))
-                else
-                    push!(v,x[i])
-                end
-            end
+            push!(fin,j)
         end
     end
-    # At some cases with high number of features, you can get numbers within the array
-    # one final step to remove them
-    y = vec([])
-    for i in 1:size(v)[1]
-        if tryparse(Int64, string(v[i])) == nothing
-            push!(y,v[i])
-        end
-    end
-    return y
+    return fin
 end
 
-function disp()
-    # NUMBER OF VARIABLES! max is 24 as of now
-    m = 2
+function poly_expand(m,n)
     alpha = "abcdefghijklmnopqrstuvwxyz"
-
     x = vec([])
     for i in 1:m
         push!(x,alpha[i])
     end
-    # usage: power(x, the power you raise it to)
-    poly_expand(m,3,true)
+    t = copy(x)
+    for i in 1:(n-1)
+        t = copy(expand(x,t))
+    end
+    return calc(t)
 end
-
-function poly_expand(m,n,show = false)
-
-    alpha = "abcdefghijklmnopqrstuvwxyz"
-
-    x = vec([])
-    for i in 1:m
-        push!(x,alpha[i])
-    end
-    t = x
-    for i in 1:n-1
-        # possible to combine them, but for the sake of readibily and ease didn't.
-        t = calc(expand(x,t))
-    end
-    if show
-        println("Initial: ",x)
-        println("Final: ",t)
-    end
-    return t
-end
-
-
-# Execcisive use of comments for clarity and understanding
-# (and for me in the distant future)
