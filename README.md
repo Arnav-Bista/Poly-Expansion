@@ -21,7 +21,7 @@ you can use `include("poly_expansion.jl")` to import the function into your code
 
 `poly_expand()` takes in 2 parameters and has one default paramenter.
 
-`poly_expand(number of variables, power
+`poly_expand(number of variables, power)`
 
 + Number of variables, or m, is self explanatory
 + power is the power you want to raise the variables to
